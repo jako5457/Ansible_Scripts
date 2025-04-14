@@ -1,4 +1,6 @@
 *.retry
-inventory.{yml,yaml}
-inventory-*.{yml,yaml}
+inventory.yml
+inventory.yaml
+inventory-*.yml
+inventory-*.yaml
 .ansible
