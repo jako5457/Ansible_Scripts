@@ -11,6 +11,11 @@
         upgrade: {{ apt.upgrade }}
       become: true
 
+    - name: Reboot system after upgrade
+      when: apt.upgrade
+      ansible.builtin.reboot:
+      become: true
+
     - name: Downloading nodejs binary
       ansible.builtin.get_url:
         url: https://deb.nodesource.com/setup_lts.x
@@ -69,3 +74,8 @@
         src: ./Zigbee2Mqtt/zigbee2mqtt.service
         dest: /etc/systemd/system/zigbee2mqtt.service
       become: true
+
+    - name: start Zigbee2Mqtt
+      ansible.builtin.systemd_service:
+        name: zigbee2mqtt
+        state: started
