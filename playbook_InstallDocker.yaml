@@ -1,0 +1,29 @@
+- name: Install Docker
+  hosts: DockerHosts
+  gather_facts: true
+  vars:
+    docker_install_link: https://download.docker.com/linux/ubuntu
+    setup_portainer: true
+  tasks:
+    - name: Stop Unattended upgrades (Ubuntu)
+      when: ansible_distribution == "Ubuntu"
+      ansible.builtin.service:
+        name: unattended-upgrades
+        state: stopped
+      become: true
+
+    - name: Full Apt upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+      become: true
+
+    - name: Install Docker
+      ansible.builtin.import_tasks:
+        file: ./modules/Docker_Install.yaml
+
+    - name: Check if docker is running
+      ansible.builtin.systemd_service:
+        name: docker
+        enabled: true
+      become: true

@@ -11,7 +11,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"redhat.ansible"
+				"redhat.ansible",
+				"christian-kohler.path-intellisense"
 			]
 		}
 	},
