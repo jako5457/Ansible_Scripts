@@ -1,0 +1,26 @@
+- name: Install Podman and Compose
+  ansible.builtin.apt:
+    name: 
+      - podman
+      - podman-compose
+    state: present
+  become: true
+
+- name: Check if cockpit is installed
+  ansible.builtin.command:
+    cmd: "dpkg-query -W -f='${Status}' cockpit"
+  register: cockpit_installed
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Install cockpit-podman
+  when: cockpit_installed.stdout == "install ok installed"
+  ansible.builtin.apt:
+    name: cockpit-podman
+    state: present
+  become: true
+
+- name: Reboot
+  ansible.builtin.reboot:
+  become: true
