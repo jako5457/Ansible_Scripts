@@ -1,50 +1,47 @@
-- name: Install docker
-  hosts: all
-  tasks:
-    - name: Install Dependencies
-      ansible.builtin.apt:
-        name:
-          - ca-certificates
-          - curl
-      become: true
+- name: Install Dependencies
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+  become: true
 
-    - name: Dowload Docker Certificate
-      ansible.builtin.get_url:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        dest: /etc/apt/keyrings/docker.asc
-        mode: a+r
-      become: true
+- name: Dowload Docker Certificate
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: a+r
+  become: true
 
-    - name: Add Docker repository
-      ansible.builtin.copy:
-        dest: /etc/apt/sources.list.d/docker.list
-        content: deb [signed-by=/etc/apt/keyrings/docker.asc] {{ docker_install_link }} {{ ansible_distribution_release }} stable
-        mode: '777'
-      become: true
+- name: Add Docker repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/docker.list
+    content: deb [signed-by=/etc/apt/keyrings/docker.asc] {{ docker_install_link }} {{ ansible_distribution_release }} stable
+    mode: '777'
+  become: true
 
-    - name: Perform apt update
-      ansible.builtin.apt:
-        update_cache: true
-      become: true
+- name: Perform apt update
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
 
-    - name: Install Docker
-      ansible.builtin.apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-          - docker-buildx-plugin
-          - docker-compose-plugin
-      become: true
+- name: Install Docker
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+  become: true
 
-    - name: Set docker permissions to current user
-      ansible.builtin.user:
-        name: '{{ ansible_user_id }}'
-        groups:
-          - docker
-        append: true
-      become: true
+- name: Set docker permissions to current user
+  ansible.builtin.user:
+    name: '{{ ansible_user_id }}'
+    groups:
+      - docker
+    append: true
+  become: true
 
-    - name: Reboot
-      ansible.builtin.reboot:
-      become: true
+- name: Reboot
+  ansible.builtin.reboot:
+  become: true

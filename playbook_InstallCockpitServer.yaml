@@ -22,7 +22,3 @@
 
     - name: Install podman
       ansible.builtin.include_tasks: tasks/Podman_Install.yaml
-
-    - name: Reboot
-      ansible.builtin.reboot:
-      become: true

@@ -1,22 +1,18 @@
-- name: Install .NET 9 on Ubuntu
-  hosts: all
+- name: Add Microsoft package signing key
+  ansible.builtin.apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: true
 
-  tasks:
-    - name: Add Microsoft package signing key
-      ansible.builtin.apt_key:
-        url: https://packages.microsoft.com/keys/microsoft.asc
-        state: present
-      become: true
+- name: Add Microsoft package repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/ubuntu/{{ ansible_distribution_release }}/prod {{ ansible_distribution_release }} main"
+    state: present
+  become: true
 
-    - name: Add Microsoft package repository
-      ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https://packages.microsoft.com/ubuntu/{{ ansible_distribution_release }}/prod {{ ansible_distribution_release }} main"
-        state: present
-      become: true
-
-    - name: Install .NET 9 SDK
-      ansible.builtin.apt:
-        update_cache: true
-        name: dotnet-sdk-9.0
-        state: present
-      become: true
+- name: Install .NET 9 SDK
+  ansible.builtin.apt:
+    update_cache: true
+    name: dotnet-sdk-9.0
+    state: present
+  become: true
