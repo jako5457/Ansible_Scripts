@@ -1,0 +1,25 @@
+- name: Install zigbee2mqtt
+  hosts: ZigbeeNodes
+  gather_facts: true
+
+  tasks:
+    - name: Stop Unattended upgrades (Ubuntu)
+      when: ansible_distribution == "Ubuntu"
+      ansible.builtin.service:
+        name: unattended-upgrades
+        state: stopped
+      become: true
+
+    - name: Full Apt upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+      become: true
+
+    - name: Reboot
+      ansible.builtin.reboot:
+      become: true
+
+    - name: Run Zigbee2Mqtt installation tasks
+      ansible.builtin.import_tasks:
+        file: ./tasks/Zigbee2Mqtt_Install.yaml

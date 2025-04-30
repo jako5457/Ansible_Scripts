@@ -16,7 +16,7 @@
 			]
 		}
 	},
-	"postCreateCommand": "ansible-galaxy install -r requirements.yml"
+	"postCreateCommand": "ansible-galaxy install -r requirements.yml --force && sudo apt update && sudo apt install sshpass"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

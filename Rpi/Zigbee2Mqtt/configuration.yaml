@@ -1,10 +1,8 @@
 # Minimal configuration.yml example
 permit_join: true
 mqtt:
-    client_id: 'MY_CLIENT_ID'
-    server: mqtt://localhost:1883
-    user: my_user
-    password: my_password
+    client_id: 'ZigPi'
+    server: mqtt://host.docker.internal:1883
     version: 4
 serial:
     # Could be either USB port (/dev/ttyUSB0), network Zigbee adapters (tcp://192.168.1.1:6638) or mDNS adapter (mdns://my-adapter).

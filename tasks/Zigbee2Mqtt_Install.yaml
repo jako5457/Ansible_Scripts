@@ -16,9 +16,15 @@
     path: ./Zigbee2Mqtt
     mode: '777'
 
+- name: Create Mqtt directory
+  ansible.builtin.file:
+    state: directory
+    path: ./Mqtt
+    mode: '777'
+
 - name: Tranfer config
   ansible.builtin.copy:
-    remote_src: true
+    remote_src: false
     src: ./Rpi/Zigbee2Mqtt/configuration.yaml
     dest: ./Zigbee2Mqtt/configuration.yaml
     mode: '777'
@@ -28,6 +34,33 @@
     name: ghcr.io/koenkk/zigbee2mqtt
     tag: latest
   retries: 5
+  become: true
+
+- name: Install mosquitto
+  ansible.builtin.apt:
+    name:
+      - mosquitto
+  become: true
+
+- name: Check for mosquitto is running
+  ansible.builtin.systemd_service:
+    name: mosquitto
+    state: stopped
+  become: true
+
+- name: Tranfer config
+  ansible.builtin.copy:
+    remote_src: false
+    src: ./Rpi/Mqtt/mosquitto.conf
+    dest: /etc/mosquitto/conf.d/mosquitto.conf
+    mode: '777'
+  become: true
+
+- name: Check for mosquitto is running
+  ansible.builtin.systemd_service:
+    name: mosquitto
+    state: started
+  become: true
 
 - name: Setup and start container
   containers.podman.podman_container:
@@ -39,8 +72,9 @@
       - /dev/ttyACM0:/dev/ttyACM0
     volume:
       - /run/udev:/run/udev:ro
-      - '{{ ansible_user_id }}/data:/app/data'
+      - './Zigbee2Mqtt:/app/data'
     timezone: Europe/Copenhagen
     restart_policy: on-failure
     state: started
     detach: true
+  become: true
