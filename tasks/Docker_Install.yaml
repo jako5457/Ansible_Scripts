@@ -15,7 +15,7 @@
 - name: Add Docker repository
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/docker.list
-    content: deb [signed-by=/etc/apt/keyrings/docker.asc] {{ docker_install_link }} {{ ansible_distribution_release }} stable
+    content: deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     mode: '777'
   become: true
 

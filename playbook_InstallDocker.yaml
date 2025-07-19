@@ -1,9 +1,6 @@
 - name: Install Docker
   hosts: DockerHosts
   gather_facts: true
-  vars:
-    docker_install_link: https://download.docker.com/linux/ubuntu
-    setup_portainer: true
   tasks:
     - name: Stop Unattended upgrades (Ubuntu)
       when: ansible_distribution == "Ubuntu"
