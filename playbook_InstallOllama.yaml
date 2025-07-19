@@ -1,49 +1,49 @@
-name: Install Ollama and openWebUI
-hosts: OllamaHosts
-tasks:
-  - name: Stop Unattended upgrades (Ubuntu)
-    when: ansible_distribution == "Ubuntu"
-    ansible.builtin.service:
-      name: unattended-upgrades
-      state: stopped
-    become: true
+- name: Install Ollama and openWebUI
+  hosts: OllamaHosts
+  tasks:
+    - name: Stop Unattended upgrades (Ubuntu)
+      when: ansible_distribution == "Ubuntu"
+      ansible.builtin.service:
+        name: unattended-upgrades
+        state: stopped
+      become: true
 
-  - name: Full Apt upgrade
-    ansible.builtin.apt:
-      update_cache: true
-      upgrade: true
-    become: true
+    - name: Full Apt upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+      become: true
 
-  - name: Install podman
-    ansible.builtin.include_tasks: tasks/Podman_Install.yaml
+    - name: Install podman
+      ansible.builtin.include_tasks: tasks/Podman_Install.yaml
 
-  - name: Download Ollama Installer
-    ansible.builtin.get_url:
-      url: https://ollama.com/install.sh
-      dest: /tmp/OllamaInstall.sh
-      mode: 777
-    retries: 5
-    become: true
+    - name: Download Ollama Installer
+      ansible.builtin.get_url:
+        url: https://ollama.com/install.sh
+        dest: /tmp/OllamaInstall.sh
+        mode: 777
+      retries: 5
+      become: true
 
-  - name: Install Ollama
-    ansible.builtin.shell:
-      cmd: sh /tmp/OllamaInstall.sh
-    become: true
+    - name: Install Ollama
+      ansible.builtin.shell:
+        cmd: sh /tmp/OllamaInstall.sh
+      become: true
 
-  - name: Check if ollama is running
-    ansible.builtin.service:
-      name: ollama
-      state: started
+    - name: Check if ollama is running
+      ansible.builtin.service:
+        name: ollama
+        state: started
 
-  - name: Install openWebUI container
-    containers.podman.podman_container:
-      name: open-webui
-      image: ghcr.io/open-webui/open-webui:main
-      volume:
-        - open-webui:/app/backend/data
-      ports:
-        - 3000:8080
-      restart_policy: always
-      add_hosts:
-        - host.containers.internal:host-gateway
+    - name: Install openWebUI container
+      containers.podman.podman_container:
+        name: open-webui
+        image: ghcr.io/open-webui/open-webui:main
+        volume:
+          - open-webui:/app/backend/data
+        ports:
+          - 3000:8080
+        restart_policy: always
+        add_hosts:
+          - host.containers.internal:host-gateway
     
