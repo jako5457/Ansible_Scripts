@@ -45,5 +45,5 @@
           - 3000:8080
         restart_policy: always
         add_hosts:
-          - host.containers.internal:host-gateway
+          host.containers.internal:host-gateway
     
